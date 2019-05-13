@@ -1,0 +1,138 @@
+---
+layout: default
+---
+<section class="standalone">
+<h3 id="header-3">Aim & purpose</h3>
+  Predict Heart Disease using Machine Learning Techonologies
+  <br>
+  <br>
+  <ol>
+  The main aim of this project is to build a system for predictive analysis of heart disease using</span>
+  machine learning algorithms. For this, UCI Heart Disease dataset was used which was
+  available from UCI Machine Learning data repository:
+  http://archive.ics.uci.edu/ml/datasets/Heart+Disease. The repository from the data folder
+  contains four datasets. They are:
+  <li>Cleveland Clinic Foundation (cleveland.data)</li>
+  <li>Hungarian Institute of Cardiology, Budapest (hungarian.data)</li>
+  <li>V.A. Medical Center, Long Beach, CA (long-beach-va.data)</li>
+  <li>University Hospital, Zurich, Switzerland (switzerland.data).</li>
+</ol>
+<h3 id="header-3">Data pre-processing</h3>
+<ol>The predictive analysis is carried out based on the attributes of the patients. The data originally consists of  76 attributes(including the target class label) but we are given the subset of 14 attributes from where 3 attributes are removed. The 3 attributes slope, ca and thal are removed due to big proportions of missing values(33.6%, 66.4% and 52.8%). The medical reason for removing ca is that the number of major vessels (0-3) colored by fluoroscopy will not change because of the presence or absence of heart disease. After removing the 3 attributes, the missing values from other 11 attributes are changed to “NA” and later replaced with a value by applying mean of existing values in each column. The target class label consists of a value ranges from 0 to 4 indicating the intensity of heart disease. It refers to the presence of heart disease i.e., 0 means no heart disease and 1 to 4 means presence of heart disease (higher the value, higher the certainty).</ol>
+
+<h3 id="header-3">Snnipet example of our tested models</h3>
+<div class="language-js highlighter-rouge">
+  <div class="highlight"><pre class="highlight">
+    <code><span class="c1">#Train model with naive bayes</span>
+<span class="nx">naive_model</span><span class="o"><</span><span class="nx">-</span><span class="kd">naive_bayes(class ~., data</span><span class="o">=</span><span class="s1"> data_all.train</span><span class="kd">)</span>
+<span class="kd">naive_model</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge">
+  <div class="highlight"><pre class="highlight">
+    <code><span class="c1">#Train model with random forest</span>
+<span class="nx">rf_ntree</span><span class="o"><</span><span class="nx">-</span><span class="kd">randomForest(class~.,data</span><span class="o">=</span><span class="s1"> train,ntree</span><span class="o">=</span><span class="kd">300)</span>
+<span class="kd">plot(rf_ntree)</span>
+<span class="kd">RFModel</span><span class="o"><</span><span class="nx">-</span><span class="kd">randomForest(train$class ~ .,</span>
+<span class="kd">data</span><span class="o">=</span><span class="s1">train,</span>
+<span class="kd">data</span><span class="o">=</span><span class="s1">TRUE,</span>
+<span class="kd">importance</span><span class="o">=</span><span class="s1">100</span><span class="kd">)</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge">
+  <div class="highlight"><pre class="highlight">
+    <code><span class="c1">#Train model with SVM</span>
+<span class="nx">svm.model</span><span class="o"><</span><span class="nx">-</span><span class="si">svm</span><span class="kd">(data_all.train$class~.,dat</span><span class="o">=</span><span class="s1">data_all.train, </span><span class="kd">kernel</span><span class="o">=</span><span class="s1">"linear"</span><span class="kd">)</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge">
+  <div class="highlight"><pre class="highlight">
+    <code><span class="c1">#Train model with KNN</span>
+<span class="nx">data_pred </span><span class="o"><</span><span class="nx">-</span><span class="kd">knn(data_all.train, data_all.test, data_all.train[,11], k</span><span class="o">=</span><span class="s1">data_all.train, </span><span class="kd">kernel</span><span class="o">=</span><span class="s1">2</span><span class="kd">)</span>
+</code></pre></div></div>
+<br>
+<h3 id="header-3">Cross-validation</h3>
+<div class="language-js highlighter-rouge">
+  <!-- <div class="highlight"><pre class="highlight">
+    <code>
+<span class="nx">for(i in 1:10){</span>
+  <span class="nx">#split dataset</span>
+  <span class="nx"set.seed(10)</span>
+  <span class="nx" >testIndexes </span><span class="o"><</span><span class="nx">-</span><span class="nx">which(folds==i,arr.ind=TRUE)</span>
+  <span class="kd">trainIndexes <</span><span class="si">-</span><span class="kd"> which(folds!</span><span class="o">=</span><span class="kd">i,arr.ind<span class="o">=</span><span class="kc">TRUE</span><span class="kd">)</span>
+  data_all.test <- datarandom[testIndexes, ]
+  data_all.train <- datarandom[trainIndexes, ]
+  #Train model with naive bayes
+  naive_model<- naive_bayes(class ~., data = data_all.train)
+  naive_model
+  #train <- sample(nrow(data), nrow(data)*0.7)
+  #generit Matrix table
+  prediction <- predict(naive_model, data_all.test)
+
+  m<- table(prediction, data_all.test$class)
+  #calculate accuracy, predict and recall
+  print(m)
+  n=sum(m)
+  nc=nrow(m)
+  diag=diag(m)
+  rowsums=apply(m,1,sum)
+  colsums=apply(m,2,sum)
+  p=rowsums
+  q=colsums
+  accuracy=sum(diag)/n
+  accuracy
+  precision=diag/colsums
+  recall=diag/rowsums
+}
+</code></pre></div></div> -->
+<p>10 folds cross validation was applied in this project</p>
+<br>
+<h3 id="header-3">Evaluation</h3>
+<div class="language-js highlighter-rouge">
+  <div class="highlight"><pre class="highlight">
+  | Classifier    |  Accuracy     | Precision  |    Recall     |    F-score    |
+  | ------------- | ------------- |----------- | ------------- | ------------- |
+  | Naive Bayes   |  0.9239       |   0.9220   |    0.9177     |     0.9197    |
+  | Random Forest |  0.8043       |   0.8035   |    0.7929     |     0.7966    |
+  | SVM           |  0.8043       |   0.7759   |    0.8013     |     0.7838    |
+  | KNN           |  0.6343       |   0.6487   |    0.6511     |     0.6302    |
+</pre></div></div>
+<br/>
+<h3 id="header-3">Rshiny</h3>
+<p> Rshiny App screenshots.</p>
+<br>
+ <div class="row">
+
+   <div class="col-4 thumb">
+     <a class="thumbnail" href="#">
+       <img class="img-responsive" src="https://github.com/Lvby/Shiny/blob/gh-pages/assets/images/ShinyApp-1.png?raw=true" alt="">
+      </a>
+   </div>
+   <div  class="col-4 thumb">
+     <a class="thumbnail" href="#">
+         <img class="img-responsive" src="https://github.com/Lvby/Shiny/blob/gh-pages/assets/images/Screenshot_warning.png?raw=true" alt="">
+     </a>
+  </div>
+ </div>
+
+ <br>
+ <br>
+
+<h3 id="header-3">Plot images</h3>
+<div class="row">
+  <div class="col-lg-4 col-md-4 col-xs-4 thumb">
+      <a class="thumbnail" href="#">
+          <img class="img-responsive" src="https://github.com/Lvby/Shiny/blob/gh-pages/assets/images/1.png?raw=true" alt="">
+      </a>
+  </div>
+  <div class="col-lg-4 col-md-4 col-xs-4 thumb">
+    <a class="thumbnail" href="#">
+        <img class="img-responsive" src="https://github.com/Lvby/Shiny/blob/gh-pages/assets/images/2.png?raw=true" alt="">
+    </a>
+</div>
+  <div class="col-lg-4 col-md-4 col-xs-4 thumb">
+      <a class="thumbnail" href="#">
+          <img class="img-responsive" src="https://github.com/Lvby/Shiny/blob/gh-pages/assets/images/3.png?raw=true" alt="">
+      </a>
+  </div>
+</div>
